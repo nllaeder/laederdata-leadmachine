@@ -1,0 +1,49 @@
+# Custom n8n Task Runner with Python packages
+# 
+# This extends the official n8n runners image to add Python dependencies
+# needed for lead processing workflows.
+#
+# Build: docker compose build n8n-runner
+# The config file workaround is needed because n8n v2.0-2.1.x has a bug
+# where environment variables for allowlists are ignored by external runners.
+
+FROM n8nio/runners:2.1.4
+
+USER root
+
+# Install Python packages into the runner's virtual environment
+# Note: The runner image uses 'uv' instead of pip
+WORKDIR /opt/runners/task-runner-python
+RUN uv pip install --python .venv/bin/python \
+    # Core packages for scraping/data processing
+    requests \
+    beautifulsoup4 \
+    pandas \
+    numpy \
+    # HTTP clients
+    httpx \
+    aiohttp \
+    urllib3 \
+    # Parsing
+    lxml \
+    regex \
+    jsonpath-ng \
+    xmltodict \
+    # Excel/CSV handling
+    openpyxl \
+    xlrd \
+    # Date/time utilities
+    python-dateutil \
+    pytz \
+    # Templating and config
+    pyyaml \
+    jinja2 \
+    python-dotenv \
+    # Utilities
+    tenacity \
+    chardet \
+    unidecode
+
+# Copy our custom config with allowlists enabled
+# This is the workaround for the env var bug
+COPY n8n-task-runners.json /etc/n8n-task-runners.json

@@ -1,0 +1,2 @@
+# LaederData Scraper Dependencies
+requests>=2.28.0

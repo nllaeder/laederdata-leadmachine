@@ -1,0 +1,77 @@
+"""
+LaederData Scraper Configuration
+
+Copy this file and update with your actual values:
+  cp settings.py.example settings.py
+
+NEVER commit settings.py with real secrets to git.
+"""
+
+# =============================================================================
+# VPS Webhook Configuration
+# =============================================================================
+
+# Webhook endpoint on VPS
+# Update with your VPS IP or domain after setting up n8n
+WEBHOOK_URL = "http://YOUR_VPS_IP:5678/webhook/ingest/deeds"
+
+# Shared secret for webhook authentication
+# Generate on VPS: openssl rand -hex 32
+# Must match WEBHOOK_SECRET in VPS ~/n8n-docker/.env
+WEBHOOK_SECRET = "YOUR_SECRET_HERE"
+
+# =============================================================================
+# Scraper Settings
+# =============================================================================
+
+# HTTP request timeout in seconds
+REQUEST_TIMEOUT = 30
+
+# Maximum retry attempts for failed requests
+MAX_RETRIES = 3
+
+# =============================================================================
+# County Configurations
+# =============================================================================
+
+COUNTIES = {
+    "dauphin": {
+        "name": "Dauphin County",
+        "base_url": "https://deeds.dauphincounty.gov/AcclaimWeb",
+        "search_url": "/Search/SearchTypeComments",
+        "data_url": "/Search/GetSearchResults",
+        "city_filter": "Harrisburg City",
+        "doc_types": ["105", "108", "226", "227"],
+        "doc_types_display": "DEED (DEED),DEEDS IN HARRISBURG (DEED HBG),R/R CRCTD DEED (RR CRCTD DEED),R/R DEED (RR DEED)",
+    },
+    # Future counties - uncomment and configure as needed
+    # "cumberland": {
+    #     "name": "Cumberland County",
+    #     "base_url": "https://...",
+    #     "search_url": "/...",
+    #     "data_url": "/...",
+    #     "city_filter": "",
+    #     "doc_types": [],
+    # },
+    # "york": {
+    #     "name": "York County",
+    #     ...
+    # },
+    # "lancaster": {
+    #     "name": "Lancaster County",
+    #     ...
+    # },
+}
+
+# =============================================================================
+# Logging Configuration
+# =============================================================================
+
+import os
+from pathlib import Path
+
+# Log directory (relative to repo root)
+LOG_DIR = Path(__file__).parent.parent / "logs"
+
+# Ensure log directory exists
+os.makedirs(LOG_DIR, exist_ok=True)
